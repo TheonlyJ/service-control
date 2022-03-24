@@ -54,7 +54,7 @@ async def status():
     else:
         return {'error': f'Service did not return status:\n {stderr}'}
 
-
+# Да, состояние чекбокса глобальное. Но у нас же всё равно нет авторизации?
 async def checkbox():
     async with aiofiles.open('checkbox', 'r') as f:
         res = await f.read()
