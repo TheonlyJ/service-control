@@ -45,3 +45,13 @@ async def restart():
     else:
         return {'error': f'Service did not restart:\n {stderr}'}
 
+
+async def status():
+    stdout, stderr = await command(f'systemctl status {SRV}')
+    active = re.search(r'(Active:.*;)', stdout)
+    if active:
+        return {'result': active.group(0)}
+    else:
+        return {'error': f'Service did not return status:\n {stderr}'}
+
+
