@@ -66,7 +66,6 @@ async def checkbox():
 async def checkbox_save(check):
     async with aiofiles.open('checkbox', 'w') as f:
         await f.write(check)
-    print(f'written {check}')
     return True
 
 
