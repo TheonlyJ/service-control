@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <title>Service {{ SRV }} control</title>
 </head>
-<body onload="status()">
+<body onload="status(); loadCheckbox();">
 <div hidden id="status" style="width: 100%; background-color: lightgreen; height: 50px; font-size: 30px; padding: 15px"></div>
 <div hidden id="error" style="width: 100%; background-color: pink; height: 50px; font-size: 30px; padding: 15px"></div>
-<button type="button" onclick="start()">Start</button>
-<button type="button" onclick="stop()">Stop</button>
-<button type="button" onclick="restart()">Restart</button>
+<button id="start" type="button" onclick="start()">Start</button>
+<button id="stop" type="button" onclick="stop()">Stop</button>
+<button id="restart" type="button" onclick="restart()">Restart</button>
+<input id="checkbox" type="checkbox" onclick="checkbox()">
+<label for="checkbox">Отключить кнопки</label>
 </body>
 <script>
     function result_handle() {
@@ -39,16 +41,56 @@
         xhttp.onload = result_handle;
         xhttp.open("GET", "stop", true);
         xhttp.send();}
+
     function restart() {
         const xhttp = new XMLHttpRequest();
         xhttp.onload = result_handle;
         xhttp.open("GET", "restart", true);
         xhttp.send();}
-    function status() {
 
+    function status() {
         const xhttp = new XMLHttpRequest();
         xhttp.onload = result_handle;
         xhttp.open("GET", "status", true);
         xhttp.send();}
+
+    function loadCheckbox() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            console.log(JSON.parse(this.responseText))
+            document.getElementById("checkbox").checked = JSON.parse(this.responseText)['checkbox']
+            if (document.getElementById("checkbox").checked) {
+                document.getElementById("start").disabled = true
+                document.getElementById("stop").disabled = true
+                document.getElementById("restart").disabled = true
+            }
+            else {
+                document.getElementById("start").disabled = false
+                document.getElementById("stop").disabled = false
+                document.getElementById("restart").disabled = false
+            }
+        };
+        xhttp.open("GET", "checkbox", true);
+        xhttp.send();
+    }
+
+    function checkbox() {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {};
+        if (document.getElementById("checkbox").checked) {
+            xhttp.open("GET", "checkbox_save?checkbox=1", true);
+            document.getElementById("start").disabled = true
+            document.getElementById("stop").disabled = true
+            document.getElementById("restart").disabled = true
+
+        }
+        else {
+            xhttp.open("GET", "checkbox_save?checkbox=0", true);
+            document.getElementById("start").disabled = false
+            document.getElementById("stop").disabled = false
+            document.getElementById("restart").disabled = false
+        }
+        xhttp.send();
+    }
 </script>
 </html>

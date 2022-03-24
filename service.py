@@ -1,4 +1,4 @@
-import asyncio
+import asyncio, aiofiles
 from config import SRV
 import re
 
@@ -53,5 +53,21 @@ async def status():
         return {'result': active.group(0)}
     else:
         return {'error': f'Service did not return status:\n {stderr}'}
+
+
+async def checkbox():
+    async with aiofiles.open('checkbox', 'r') as f:
+        res = await f.read()
+    if res == '1':
+        return True
+    return False
+
+
+async def checkbox_save(check):
+    async with aiofiles.open('checkbox', 'w') as f:
+        await f.write(check)
+    print(f'written {check}')
+    return True
+
 
 
