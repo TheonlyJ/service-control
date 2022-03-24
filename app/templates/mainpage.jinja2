@@ -2,17 +2,53 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Service control</title>
+    <title>Service {{ SRV }} control</title>
 </head>
-<body>
-{% if result %}
-    <div style="width: 100%; background-color: lightgreen; height: 50px; font-size: 30px; padding: 15px">{{result}}</div>
-{% endif %}
-{% if error %}
-    <div style="width: 100%; background-color: pink; height: 50px; font-size: 30px; padding: 15px">{{error}}</div>
-{% endif %}
-<button type="button" onclick="document.location='start'">Start</button>
-<button type="button" onclick="document.location='stop'">Stop</button>
-<button type="button" onclick="document.location='restart'">Restart</button>
+<body onload="status()">
+<div hidden id="status" style="width: 100%; background-color: lightgreen; height: 50px; font-size: 30px; padding: 15px"></div>
+<div hidden id="error" style="width: 100%; background-color: pink; height: 50px; font-size: 30px; padding: 15px"></div>
+<button type="button" onclick="start()">Start</button>
+<button type="button" onclick="stop()">Stop</button>
+<button type="button" onclick="restart()">Restart</button>
 </body>
+<script>
+    function result_handle() {
+        let result = JSON.parse(this.responseText);
+        console.log(result)
+        if (result['result']) {
+            document.getElementById("status").innerHTML = result['result'];
+            document.getElementById("status").hidden = false;
+        } else {
+            document.getElementById("status").hidden = true;
+        }
+        if (result['error']) {
+            document.getElementById("error").innerHTML = result['error'];
+            document.getElementById("error").hidden = false;
+        } else {
+            document.getElementById("error").hidden = true;
+        }
+    }
+    function start() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = result_handle;
+        xhttp.open("GET", "start", true);
+        xhttp.send();}
+
+    function stop() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = result_handle;
+        xhttp.open("GET", "stop", true);
+        xhttp.send();}
+    function restart() {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = result_handle;
+        xhttp.open("GET", "restart", true);
+        xhttp.send();}
+    function status() {
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = result_handle;
+        xhttp.open("GET", "status", true);
+        xhttp.send();}
+</script>
 </html>

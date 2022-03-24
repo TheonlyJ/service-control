@@ -1,22 +1,30 @@
 import aiohttp_jinja2
+import aiohttp.web as web
 from service import *
+from config import SRV
+import json
 
 
 @aiohttp_jinja2.template("mainpage.jinja2")
 async def mainpage(request):
-    print('wtf')
-    return await status()
+    return {'SRV': SRV}
 
-@aiohttp_jinja2.template("mainpage.jinja2")
+
 async def start_button(request):
-    return await start()
+    print('start called')
+    return web.json_response(await start())
 
 
-@aiohttp_jinja2.template("mainpage.jinja2")
 async def stop_button(request):
-    return await stop()
+    print('stop called')
+    return web.json_response(await stop())
 
 
-@aiohttp_jinja2.template("mainpage.jinja2")
 async def restart_button(request):
-    return await restart()
+    print('restart called')
+    return web.json_response(await restart())
+
+
+async def status_button(request):
+    print('status called')
+    return web.json_response(await status())
